@@ -76,10 +76,6 @@
 
 #ifdef __ANDROID__
 
-#ifndef ANDROID_APP_PACKAGE_NAME
-#define ANDROID_APP_PACKAGE_NAME "com.github.shadowsocks"
-#endif
-
 #include <ancillary.h>
 
 #include <sys/prctl.h>
@@ -415,7 +411,7 @@ int wait_for_fd()
     }
     fcntl(sock, F_SETFL, flags | O_NONBLOCK);
 
-    char *path = "/data/data/" ANDROID_APP_PACKAGE_NAME "/sock_path";
+    char *path = "./sock_path";
     if (options.sock_path != NULL) {
         path = options.sock_path;
     }
@@ -488,14 +484,6 @@ int main (int argc, char **argv)
         print_help(argv[0]);
         goto fail0;
     }
-
-#ifdef __ANDROID__
-    if (options.fake_proc) {
-        // Fake process name to cheat on Lollipop
-        strcpy(argv[0], ANDROID_APP_PACKAGE_NAME);
-        prctl(PR_SET_NAME, ANDROID_APP_PACKAGE_NAME);
-    }
-#endif
 
     // handle --help and --version
     if (options.help) {
